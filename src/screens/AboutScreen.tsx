@@ -53,6 +53,11 @@ export default function AboutScreen() {
           solutions that make a difference.
         </Text>
       </View>
+      <View style={styles.legalWrap}>
+        <Text style={styles.legalNote}>
+          CPF Foundation is a 501(C)(3) charity organization, with Tax ID:87-1029937
+        </Text>
+      </View>
     </View>
   );
 }
@@ -103,6 +108,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
 
     backgroundColor: '#f6f327ff',
+  },
+  legalWrap: {
+    paddingHorizontal: 16,
+    marginTop: 8,
+    marginBottom: 24,
+  },
+  legalNote: {
+    textAlign: 'center',
+    color: '#6b7280',
+    fontSize: 12,
+    fontWeight: '600',
   },
   col: {
     flex: 1,

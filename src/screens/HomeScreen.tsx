@@ -2,7 +2,17 @@ import React, { useRef, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import type { RootDrawerParamList } from '../navigation/RootTabs';
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Linking, Image, ScrollView, SafeAreaView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+  Linking,
+  Image,
+  ScrollView,
+  SafeAreaView,
+} from 'react-native';
 
 export default function HomeScreen() {
   const navigation = useNavigation<DrawerNavigationProp<RootDrawerParamList>>();
@@ -17,23 +27,30 @@ export default function HomeScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <FourTextCard
-          backgroundImage={{ uri: 'https://images.unsplash.com/photo-1496302662116-35cc4f36df92?q=80&w=1600&auto=format&fit=crop' }}
+          backgroundImage={require('../assets/Flood_Project_2024/2024/banner.jpg')}
           lines={[
-            'Welcome Home',
-            'Discover. Engage. Inspire.',
-            'Latest updates and news',
-            'Tap to explore',
+            'Together, we uplift communities',
+            'Join us to create lasting impact',
+            '',
+            '',
           ]}
         />
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>🎥 Watch Our Featured Videos</Text>
           <Text style={styles.sectionSubtitle}>
-            Learn more about our mission, community efforts, and the amazing work done by our volunteers.
+            Learn more about our mission, community efforts, and the amazing
+            work done by our volunteers.
           </Text>
         </View>
         <View style={styles.videosContainer}>
-          <VideoCard videoId="dQw4w9WgXcQ" title="Our Mission and Vision" />
-          <VideoCard videoId="3JZ_D3ELwOQ" title="Volunteer Stories and Impact" />
+          <VideoCard
+            videoId="ZSsX-xDb5Cc"
+            title="Bringing Hope and Kindness to families during Ramadan"
+          />
+          <VideoCard
+            videoId="dJyZSAd6ZiU"
+            title="Building Housed and Madrasha Buildings"
+          />
         </View>
         <ImageBackground
           source={require('../assets/blue-bg-pattern.png')}
@@ -42,15 +59,17 @@ export default function HomeScreen() {
         >
           <View style={styles.sectionHeroOverlay} />
           <View style={styles.sectionHeroContent}>
-            <Text style={[styles.sectionTitle, { color: '#fff' }]}>Financial AID to Flood VICTIM</Text>
+            <Text style={[styles.sectionTitle, { color: '#fff' }]}>
+              Financial AID to Flood VICTIM
+            </Text>
           </View>
         </ImageBackground>
-        
+
         <ImageSlider
           images={[
-            require('../assets/blue-bg-pattern.png'),
-            require('../assets/blue-bg-pattern.png'),
-            require('../assets/blue-bg-pattern.png'),
+            require('../assets/financial_aid_to_flood/2024/fatf1.jpeg'),
+            require('../assets/financial_aid_to_flood/2024/fatf2.jpeg'),
+            require('../assets/financial_aid_to_flood/2024/fatf3.jpeg'),
           ]}
         />
         <View style={styles.buttonRow}>
@@ -77,15 +96,17 @@ export default function HomeScreen() {
         >
           <View style={styles.sectionHeroOverlay} />
           <View style={styles.sectionHeroContent}>
-            <Text style={[styles.sectionTitle, { color: '#fff' }]}>Free Medical Camps</Text>
+            <Text style={[styles.sectionTitle, { color: '#fff' }]}>
+              Free Medical Camps
+            </Text>
           </View>
         </ImageBackground>
 
         <ImageSlider
           images={[
-            require('../assets/blue-bg-pattern.png'),
-            require('../assets/blue-bg-pattern.png'),
-            require('../assets/blue-bg-pattern.png'),
+            require('../assets/medical_camp_flood/2024/IMG_2715.webp'),
+            require('../assets/medical_camp_flood/2024/IMG_2680.webp'),
+            require('../assets/medical_camp_flood/2024/IMG_2875.webp'),
           ]}
         />
         <View style={styles.buttonRow}>
@@ -112,7 +133,14 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#fff' },
   scroll: { flex: 1, backgroundColor: '#fff' },
-  container: { width: '100%', alignItems: 'stretch', justifyContent: 'flex-start', padding: 16, paddingTop: 12, paddingBottom: 32 },
+  container: {
+    width: '100%',
+    alignItems: 'stretch',
+    justifyContent: 'flex-start',
+    padding: 16,
+    paddingTop: 12,
+    paddingBottom: 32,
+  },
   contentGrow: { flexGrow: 1 },
   card: {
     width: '100%',
@@ -324,7 +352,11 @@ type FourTextCardProps = {
 
 function FourTextCard({ backgroundImage, lines }: FourTextCardProps) {
   return (
-    <ImageBackground source={backgroundImage} style={styles.card} imageStyle={styles.cardImage}>
+    <ImageBackground
+      source={backgroundImage}
+      style={styles.card}
+      imageStyle={styles.cardImage}
+    >
       <View style={styles.overlay} />
       <View style={styles.textContainer}>
         <View>
@@ -379,15 +411,25 @@ type ImageSliderProps = {
 function ImageSlider({ images }: ImageSliderProps) {
   const scrollRef = useRef<ScrollView>(null);
   const [index, setIndex] = useState(0);
+  const [sliderWidth, setSliderWidth] = useState(0);
 
   const onScroll = (e: any) => {
     const { contentOffset, layoutMeasurement } = e.nativeEvent;
-    const newIndex = Math.round(contentOffset.x / layoutMeasurement.width);
-    if (newIndex !== index) setIndex(newIndex);
+    const width = layoutMeasurement?.width || sliderWidth;
+    if (width > 0) {
+      const newIndex = Math.round(contentOffset.x / width);
+      if (newIndex !== index) setIndex(newIndex);
+    }
   };
 
   return (
-    <View style={styles.sliderContainer}>
+    <View
+      style={styles.sliderContainer}
+      onLayout={e => {
+        const w = e.nativeEvent.layout.width;
+        if (w && w !== sliderWidth) setSliderWidth(w);
+      }}
+    >
       <ScrollView
         ref={scrollRef}
         horizontal
@@ -396,9 +438,14 @@ function ImageSlider({ images }: ImageSliderProps) {
         onScroll={onScroll}
         scrollEventThrottle={16}
         style={styles.slider}
+        decelerationRate="fast"
+        snapToInterval={sliderWidth || undefined}
       >
         {images.map((img, i) => (
-          <View key={i} style={styles.slide}>
+          <View
+            key={i}
+            style={[styles.slide, { width: sliderWidth || undefined }]}
+          >
             <Image source={img} style={styles.sliderImage} />
           </View>
         ))}
